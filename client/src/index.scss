@@ -1,0 +1,16 @@
+*, *::after, *::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    //background: url('./assets/безымянный.png') 50% 34%;
+    height: 100vh;
+}
+
+#root {
+    height: 100%;
+    position: relative;
+}
+

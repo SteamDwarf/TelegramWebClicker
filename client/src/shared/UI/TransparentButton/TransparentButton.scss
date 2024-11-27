@@ -1,0 +1,9 @@
+.transparent-button {
+    background-color: transparent;
+    border: none;
+    outline: none;
+
+    &:active {
+        background-color: #ffffff22;
+    }
+}

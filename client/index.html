@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://telegram.org/js/telegram-web-app.js?56"></script>
+    <style>
+      .loader {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: var(--tg-theme-bg-color);
+      }
+
+      .loader__icon {
+          --d:16px;
+          width: 4px;
+          height: 4px;
+          border-radius: 50%;
+          color: var(--tg-theme-text-color);
+          box-shadow: 
+            calc(1*var(--d))      calc(0*var(--d))     0 0,
+            calc(0.707*var(--d))  calc(0.707*var(--d)) 0 1px,
+            calc(0*var(--d))      calc(1*var(--d))     0 2px,
+            calc(-0.707*var(--d)) calc(0.707*var(--d)) 0 2px,
+            calc(-1*var(--d))     calc(0*var(--d))     0 2px,
+            calc(-0.707*var(--d)) calc(-0.707*var(--d))0 3px,
+            calc(0*var(--d))      calc(-1*var(--d))    0 3px;
+          animation: l27 1s infinite steps(8);
+      }
+
+      .loader__text {
+          margin-top: 32px;
+          color: var(--tg-theme-text-color);
+          font-weight: bold;
+          font-size: 24px;
+      }
+
+      @keyframes l27 {
+          100% {transform: rotate(1turn)}
+      }
+
+    </style>
+    <title>Vite + React + TS</title>
+  </head>
+  <body>
+    <div id="root">
+      <div class='loader'>
+        <div class='loader__icon'></div>
+        <span class='loader__text'>
+          Loading...
+        </span>
+      </div>
+    </div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

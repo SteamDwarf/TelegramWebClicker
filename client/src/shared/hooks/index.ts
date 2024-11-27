@@ -1,0 +1,1 @@
+export { useTelegramApp } from "./useTelegramApp";
