@@ -1,65 +1,42 @@
 import { createContext, FC, PropsWithChildren, useContext, useEffect, useState } from "react";
 import { useCloudeStorage } from "shared/hooks/useCloudeStorage";
-import { IAppData } from "shared/types";
+import { useStats, useStatsActions } from "shared/state/StatsState/hooks";
 
-interface ContextValue {
-    data: IAppData,
-    changeData: (fieldName: keyof IAppData, value: string | number) => void;
-    isPageLoading: boolean;
-    setIsPageLoding: (state: boolean) => void;
-}
-
-const initData: ContextValue = {
-    data: {
-        wood: 0,
-        food: 0,
-        villagers: 6,
-    },
-    changeData: () => null,
-    isPageLoading: true,
-    setIsPageLoding: () => null
-}
-
-const AppContext = createContext(initData);
+const AppContext = createContext({});
 
 
 export const AppContextProvider:FC<PropsWithChildren> = ({children}) => {
     const { savedData, saveData, isLoading } = useCloudeStorage();
-    const [ data, setData ] = useState<IAppData>(savedData);
+    const { updateStat } = useStatsActions();
+    const stats = useStats();
     const [needSave, setNeedSave] = useState(false);
-    const [isPageLoading, setIsPageLoding] = useState(true);
-
-    const changeData = (fieldName: keyof IAppData, value: string | number) => {
-        setData({...data, [fieldName]: value});
-    }
-    
-    const value:ContextValue = {
-        data,
-        changeData,
-        isPageLoading,
-        setIsPageLoding
-    }
+    //const [isPageLoading, setIsPageLoding] = useState(true);
 
 
     useEffect(() => {
         const saveTimer = setInterval(() => setNeedSave(true), 5000);
 
-        return () => clearInterval(saveTimer);
+        return () => {clearInterval(saveTimer)}
     }, [])
 
     useEffect(() => {
-        if(!isLoading) setData(savedData);
+        if(!isLoading) {
+            updateStat({stat: 'coins', value: savedData.coins});
+            updateStat({stat: 'food', value: savedData.food});
+            updateStat({stat: 'villagers', value: savedData.villagers});
+            updateStat({stat: 'wood', value: savedData.wood});
+        }
     }, [isLoading])
 
     useEffect(() => {
         if(needSave) {
-            saveData(data);
+            saveData(stats);
             setNeedSave(false);
         }
     }, [needSave])
 
 
-    return <AppContext.Provider value={value}>{children}</AppContext.Provider>
+    return <AppContext.Provider value={{}}>{children}</AppContext.Provider>
 };
 
 export const useAppContext = () => useContext(AppContext)

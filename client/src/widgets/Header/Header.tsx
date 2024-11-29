@@ -1,28 +1,29 @@
 import { IStatItem, StatItem } from 'features/StatItem';
 import './Header.scss';
-import { FoodIcon, LogIcon, VillagerIcon } from 'shared/icons';
-import { useAppContext } from 'shared/context/AppContext';
+import { CoinIcon, FoodIcon, LogIcon, VillagerIcon } from 'shared/icons';
+import { useStats } from 'shared/state/StatsState/hooks';
 
 
 
 export const Header = () => {
-    const { data } = useAppContext();
-    /* useEffect(() => {
-        console.log(data);
-    }, [data]) */
+    const { food, wood, villagers, coins } = useStats();
 
     const stats:IStatItem[] = [
         {
             icon: <LogIcon />,
-            value: data.wood
+            value: wood
         },
         {
             icon: <FoodIcon />,
-            value: data.food
+            value: food
         },
         {
             icon: <VillagerIcon />,
-            value: data.villagers
+            value: villagers
+        },
+        {
+            icon: <CoinIcon />,
+            value: coins
         }
     ]
 

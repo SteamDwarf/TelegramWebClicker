@@ -1,12 +1,12 @@
 import { TransparentButton } from "shared/UI/TransparentButton/TransparentButton";
 import FoodImage from 'assets/food.png';
-import { useAppContext } from "shared/context/AppContext";
+import { useStatsActions } from "shared/state/StatsState/hooks";
 
 export const Food = () => {
-    const { data, changeData } = useAppContext();
+    const { increaseStat } = useStatsActions();
 
     const onClick = () => {
-        changeData('food', data.food + 1)
+        increaseStat({stat: 'food', value: 1});
     }
 
     return (

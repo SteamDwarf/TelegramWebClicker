@@ -1,0 +1,9 @@
+.shop__page {
+    display: flex;
+    column-gap: 12px;
+    row-gap: 12px;
+    padding: 8px;
+    justify-content: center;
+    background: var(--tg-theme-bg-color);
+    color: var(--tg-theme-text-color);
+}

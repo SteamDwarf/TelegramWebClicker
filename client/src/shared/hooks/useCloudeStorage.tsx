@@ -13,7 +13,8 @@ export const useCloudeStorage = () => {
     const [savedData, setSavedData] = useState<IAppData>({
         wood: 0,
         food: 0,
-        villagers: 6,
+        villagers: 2,
+        coins: 0
     });
     const [isLoading, setIsLoading] = useState(true);
 
@@ -21,15 +22,18 @@ export const useCloudeStorage = () => {
         CloudStorage.setItem('wood', data.wood.toString());
         CloudStorage.setItem('food', data.food.toString());
         CloudStorage.setItem('villagers', data.villagers.toString());
+        CloudStorage.setItem('coins', data.coins.toString());
     }
 
     useEffect(() => {
-        CloudStorage.getItems(['wood', 'food', 'villagers'], (error, values) => {
+        CloudStorage.getItems(['wood', 'food', 'villagers', 'coins'], (error, values) => {
             if(!error && values) {
                 setSavedData({
                     wood: Number(values['wood']),
                     food: Number(values['food']),
-                    villagers: Number(values['villagers'])
+                    villagers: Number(values['villagers']),
+                    coins: 50
+                    //coins: Number(values['coins'])
                 });
                 setIsLoading(false);
             }

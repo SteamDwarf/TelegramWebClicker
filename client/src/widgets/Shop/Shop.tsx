@@ -4,7 +4,7 @@ import { TransparentButton } from 'shared/UI/TransparentButton/TransparentButton
 
 export const Shop = () => {
     return (
-        <TransparentButton className='shop'>
+        <TransparentButton className='shop' toUrl='/shop'>
             <img src={ShopImage} alt='shop' />
         </TransparentButton>
     );
