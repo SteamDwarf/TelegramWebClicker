@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "../hooks"
 import { selectStats } from "./selectors"
-import { increaseStat, updateStat } from "./statsSlice";
+import { bornVillager, eatFood, increaseStat, resetStat, updateStat } from "./statsSlice";
 import { StatUpdateAction } from "./types";
 
 export const useStats = () => {
@@ -12,6 +12,9 @@ export const useStatsActions = () => {
 
     return {
         updateStat: (data: StatUpdateAction) => dispatch(updateStat(data)),
-        increaseStat: (data: StatUpdateAction) => dispatch(increaseStat(data))
+        increaseStat: (data: StatUpdateAction) => dispatch(increaseStat(data)),
+        resetStat: () => dispatch(resetStat()),
+        eatFood: () => dispatch(eatFood()),
+        bornVillager: () => dispatch(bornVillager()),
     }
 }

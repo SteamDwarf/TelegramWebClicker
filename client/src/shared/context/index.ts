@@ -1,1 +1,1 @@
-export { AppContextProvider } from './AppContext'; 
+export {useShopContext} from './ShopContext/ShopContext';

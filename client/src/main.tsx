@@ -12,11 +12,9 @@ import { store } from 'shared/state'
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
         <Provider store={store}>
-            <AppContextProvider>
-                <ShopContextProvider>
-                    <RouterProvider router={router}/>
-                </ShopContextProvider>
-            </AppContextProvider>
+            <ShopContextProvider>
+                <RouterProvider router={router}/>
+            </ShopContextProvider>
         </Provider>
         
     </StrictMode>,
