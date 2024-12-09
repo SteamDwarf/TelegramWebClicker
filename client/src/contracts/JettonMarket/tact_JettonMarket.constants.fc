@@ -1,0 +1,24 @@
+;; String "dump(ctx.value)"
+slice __gen_slice_string_dbe5b4cb15654458564a939234c54475944f887108d46108ca0b7ed103e42985() asm """
+    B{b5ee9c7241010101001100001e64756d70286374782e76616c7565295955155e} B>boc <s PUSHSLICE
+""";
+
+;; String "dump(sum)"
+slice __gen_slice_string_0b6d73cc8e038790b092043722a61014008427a1852a70eb774d153cd3af67eb() asm """
+    B{b5ee9c7241010101000b00001264756d702873756d29e91e436b} B>boc <s PUSHSLICE
+""";
+
+;; String "dump(ctx.value - sum)"
+slice __gen_slice_string_9b80f7e1030089b5bc71bcc4ce2392ce2d94e418467439dac333b1b03823a461() asm """
+    B{b5ee9c7241010101001700002a64756d70286374782e76616c7565202d2073756d29b2573881} B>boc <s PUSHSLICE
+""";
+
+;; String "dump(ctx.readForwardFee())"
+slice __gen_slice_string_48418b42edb543b36773c6858b40bfded24922a6164f91dd367d26c9c9c3d880() asm """
+    B{b5ee9c7241010101001c00003464756d70286374782e72656164466f727761726446656528292951c29207} B>boc <s PUSHSLICE
+""";
+
+;; String "dump(ctx.value - sum - ctx.readForwardFee())"
+slice __gen_slice_string_b5d81797b39c6d9b00414773759b1852a36388e776f16b6d6db5d00be70fb63c() asm """
+    B{b5ee9c7241010101002e00005864756d70286374782e76616c7565202d2073756d202d206374782e72656164466f7277617264466565282929641abe13} B>boc <s PUSHSLICE
+""";

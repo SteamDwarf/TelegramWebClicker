@@ -1,0 +1,211 @@
+#pragma version =0.4.4;
+#pragma allow-post-modification;
+#pragma compute-asm-ltr;
+
+#include "tact_JettonMaster.headers.fc";
+#include "tact_JettonMaster.stdlib.fc";
+#include "tact_JettonMaster.storage.fc";
+
+;;
+;; Contract JettonMaster functions
+;;
+
+(int, int, slice, cell, cell) $JettonMaster$_contract_init(slice $owner, cell $jetton_content) impure inline_ref {
+    var (($self'total_supply, $self'mintable, $self'admin_address, $self'jetton_content, $self'jetton_wallet_code)) = (null(), null(), null(), null(), null());
+    $self'total_supply = 0;
+    $self'jetton_content = $jetton_content;
+    $self'mintable = true;
+    $self'admin_address = $owner;
+    $self'jetton_wallet_code = $StateInit$_get_code($JettonWallet$_init_child(__tact_context_sys, __tact_context_get_sender(), $global_myAddress()));
+    return ($self'total_supply, $self'mintable, $self'admin_address, $self'jetton_content, $self'jetton_wallet_code);
+}
+
+((int, int, slice, cell, cell), (int, int, slice, cell, cell)) $JettonMaster$_fun_get_jetton_data((int, int, slice, cell, cell) $self) impure inline_ref {
+    var (($self'total_supply, $self'mintable, $self'admin_address, $self'jetton_content, $self'jetton_wallet_code)) = $self;
+    var $fresh$ret_0 = $JettonData$_constructor_total_supply_jetton_content_mintable_admin_address_jetton_wallet_code($self'total_supply, $self'jetton_content, $self'mintable, $self'admin_address, $self'jetton_wallet_code);
+    return (($self'total_supply, $self'mintable, $self'admin_address, $self'jetton_content, $self'jetton_wallet_code), $fresh$ret_0);
+}
+
+((int, int, slice, cell, cell), slice) $JettonMaster$_fun_get_wallet_address((int, int, slice, cell, cell) $self, slice $owner_address) impure inline_ref {
+    var (($self'total_supply, $self'mintable, $self'admin_address, $self'jetton_content, $self'jetton_wallet_code)) = $self;
+    var ($walletInit'code, $walletInit'data) = $JettonWallet$_init_child(__tact_context_sys, $owner_address, $global_myAddress());
+    var $fresh$ret_1 = $global_contractAddress(($walletInit'code, $walletInit'data));
+    return (($self'total_supply, $self'mintable, $self'admin_address, $self'jetton_content, $self'jetton_wallet_code), $fresh$ret_1);
+}
+
+;;
+;; Receivers of a Contract JettonMaster
+;;
+
+(((int, int, slice, cell, cell)), ()) $JettonMaster$_internal_binary_ChangeContent((int, int, slice, cell, cell) $self, (cell) $msg) impure inline {
+    var ($self'total_supply, $self'mintable, $self'admin_address, $self'jetton_content, $self'jetton_wallet_code) = $self;
+    var ($msg'jetton_content) = $msg;
+    $self'jetton_content = $msg'jetton_content;
+    return (($self'total_supply, $self'mintable, $self'admin_address, $self'jetton_content, $self'jetton_wallet_code), ());
+}
+
+(((int, int, slice, cell, cell)), ()) $JettonMaster$_internal_binary_Transfer((int, int, slice, cell, cell) $self, (int, int, slice, slice, cell, int, cell) $msg) impure inline {
+    var ($self'total_supply, $self'mintable, $self'admin_address, $self'jetton_content, $self'jetton_wallet_code) = $self;
+    var ($msg'query_id, $msg'amount, $msg'reciever, $msg'response_destination, $msg'custom_payload, $msg'forward_ton_amount, $msg'forward_payload) = $msg;
+    var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
+    throw_unless(3688, ($self'mintable == true));
+    throw_unless(29170, ( __tact_slice_eq_bits($self'admin_address, __tact_context_get_sender()) ));
+    throw_unless(51724, ((((($Context$_fun_readForwardFee(($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw)) * 2) + 40000000) + 10000000) + $msg'forward_ton_amount) < $ctx'value));
+    var ($walletInit'code, $walletInit'data) = $JettonWallet$_init_child(__tact_context_sys, $msg'reciever, $global_myAddress());
+    slice $reciever = $global_contractAddress(($walletInit'code, $walletInit'data));
+    $self'total_supply = $self'total_supply + $msg'amount;
+    $global_send($SendParameters$_constructor_to_value_body_mode_code_data($reciever, 0, $InternalTransfer$_store_cell($InternalTransfer$_constructor_query_id_amount_from_response_address_forward_ton_amount_forward_payload($msg'query_id, $msg'amount, __tact_context_get_sender(), $msg'response_destination, $msg'forward_ton_amount, $msg'forward_payload)), 66, $walletInit'code, $walletInit'data));
+    return (($self'total_supply, $self'mintable, $self'admin_address, $self'jetton_content, $self'jetton_wallet_code), ());
+}
+
+(((int, int, slice, cell, cell)), ()) $JettonMaster$_internal_binary_BurnNotification((int, int, slice, cell, cell) $self, (int, int, slice, slice) $msg) impure inline {
+    var ($self'total_supply, $self'mintable, $self'admin_address, $self'jetton_content, $self'jetton_wallet_code) = $self;
+    var ($msg'query_id, $msg'amount, $msg'sender, $msg'response_destination) = $msg;
+    var ($walletInit'code, $walletInit'data) = $JettonWallet$_init_child(__tact_context_sys, $msg'sender, $global_myAddress());
+    slice $senderAddress = $global_contractAddress(($walletInit'code, $walletInit'data));
+    throw_unless(29170, ( __tact_slice_eq_bits($senderAddress, __tact_context_get_sender()) ));
+    $self'total_supply = $self'total_supply - $msg'amount;
+    $global_send($SendParameters$_constructor_to_value_mode_body($msg'response_destination, 0, 64, $Excesses$_store_cell($Excesses$_constructor_query_id($msg'query_id))));
+    return (($self'total_supply, $self'mintable, $self'admin_address, $self'jetton_content, $self'jetton_wallet_code), ());
+}
+
+(((int, int, slice, cell, cell)), ()) $JettonMaster$_receive_binary_bounce_InternalTransfer((int, int, slice, cell, cell) $self, (int, int) $src) impure inline {
+    var ($self'total_supply, $self'mintable, $self'admin_address, $self'jetton_content, $self'jetton_wallet_code) = $self;
+    var ($src'query_id, $src'amount) = $src;
+    $self'total_supply = $self'total_supply - $src'amount;
+    return (($self'total_supply, $self'mintable, $self'admin_address, $self'jetton_content, $self'jetton_wallet_code), ());
+}
+
+((int, int, slice, cell, cell), ()) $JettonMaster$_internal_text_a2f43c647fca1834ba717617790fa8ce6fe6ee0cb77d0b3ef0a89a93b33176f2((int, int, slice, cell, cell) $self) impure inline {
+    var ($self'total_supply, $self'mintable, $self'admin_address, $self'jetton_content, $self'jetton_wallet_code) = $self;
+    throw_unless(29170, ( __tact_slice_eq_bits($self'admin_address, __tact_context_get_sender()) ));
+    $self'mintable = false;
+    return (($self'total_supply, $self'mintable, $self'admin_address, $self'jetton_content, $self'jetton_wallet_code), ());
+}
+
+(((int, int, slice, cell, cell)), ()) $JettonMaster$_internal_binary_Deploy((int, int, slice, cell, cell) $self, (int) $deploy) impure inline {
+    var ($self'total_supply, $self'mintable, $self'admin_address, $self'jetton_content, $self'jetton_wallet_code) = $self;
+    var ($deploy'queryId) = $deploy;
+    ($self'total_supply, $self'mintable, $self'admin_address, $self'jetton_content, $self'jetton_wallet_code)~$JettonMaster$_fun_notify($DeployOk$_store_cell($DeployOk$_constructor_queryId($deploy'queryId)));
+    return (($self'total_supply, $self'mintable, $self'admin_address, $self'jetton_content, $self'jetton_wallet_code), ());
+}
+
+;;
+;; Get methods of a Contract JettonMaster
+;;
+
+_ %get_jetton_data() method_id(106029) {
+    var self = $JettonMaster$_contract_load();
+    var res = self~$JettonMaster$_fun_get_jetton_data();
+    return $JettonData$_to_external(res);
+}
+
+_ %get_wallet_address(slice $owner_address) method_id(103289) {
+    slice $owner_address = __tact_verify_address($owner_address);
+    var self = $JettonMaster$_contract_load();
+    var res = self~$JettonMaster$_fun_get_wallet_address($owner_address);
+    return res;
+}
+
+_ lazy_deployment_completed() method_id {
+    return get_data().begin_parse().load_int(1);
+}
+
+;;
+;; Routing of a Contract JettonMaster
+;;
+
+((int, int, slice, cell, cell), int) $JettonMaster$_contract_router_internal((int, int, slice, cell, cell) self, int msg_bounced, slice in_msg) impure inline_ref {
+    ;; Handle bounced messages
+    if (msg_bounced) {
+        
+        ;; Skip 0xFFFFFFFF
+        in_msg~skip_bits(32);
+        
+        ;; Parse op
+        int op = 0;
+        if (slice_bits(in_msg) >= 32) {
+            op = in_msg.preload_uint(32);
+        }
+        
+        ;; Bounced handler for InternalTransfer message
+        if (op == 0x178d4519) {
+            var msg = in_msg~$InternalTransfer$_load_bounced();
+            self~$JettonMaster$_receive_binary_bounce_InternalTransfer(msg);
+            return (self, true);
+        }
+        
+        return (self, true);
+    }
+    
+    ;; Parse incoming message
+    int op = 0;
+    if (slice_bits(in_msg) >= 32) {
+        op = in_msg.preload_uint(32);
+    }
+    
+    
+    ;; Receive ChangeContent message
+    if (op == 274271986) {
+        var msg = in_msg~$ChangeContent$_load();
+        self~$JettonMaster$_internal_binary_ChangeContent(msg);
+        return (self, true);
+    }
+    
+    ;; Receive Transfer message
+    if (op == 0xf8a7ea5) {
+        var msg = in_msg~$Transfer$_load();
+        self~$JettonMaster$_internal_binary_Transfer(msg);
+        return (self, true);
+    }
+    
+    ;; Receive BurnNotification message
+    if (op == 0x7bdd97de) {
+        var msg = in_msg~$BurnNotification$_load();
+        self~$JettonMaster$_internal_binary_BurnNotification(msg);
+        return (self, true);
+    }
+    
+    ;; Receive Deploy message
+    if (op == 2490013878) {
+        var msg = in_msg~$Deploy$_load();
+        self~$JettonMaster$_internal_binary_Deploy(msg);
+        return (self, true);
+    }
+    
+    ;; Text Receivers
+    if (op == 0) {
+        var text_op = slice_hash(in_msg);
+        
+        ;; Receive "Stop Mint" message
+        if (text_op == 0xa2f43c647fca1834ba717617790fa8ce6fe6ee0cb77d0b3ef0a89a93b33176f2) {
+            self~$JettonMaster$_internal_text_a2f43c647fca1834ba717617790fa8ce6fe6ee0cb77d0b3ef0a89a93b33176f2();
+            return (self, true);
+        }
+    }
+    
+    return (self, false);
+}
+
+() recv_internal(int msg_value, cell in_msg_cell, slice in_msg) impure {
+    
+    ;; Context
+    var cs = in_msg_cell.begin_parse();
+    var msg_flags = cs~load_uint(4);
+    var msg_bounced = -(msg_flags & 1);
+    slice msg_sender_addr = __tact_verify_address(cs~load_msg_addr());
+    __tact_context = (msg_bounced, msg_sender_addr, msg_value, cs);
+    __tact_context_sender = msg_sender_addr;
+    
+    ;; Load contract data
+    var self = $JettonMaster$_contract_load();
+    
+    ;; Handle operation
+    int handled = self~$JettonMaster$_contract_router_internal(msg_bounced, in_msg);
+    
+    ;; Throw if not handled
+    throw_unless(130, handled);
+    
+    ;; Persist state
+    $JettonMaster$_contract_store(self);
+}

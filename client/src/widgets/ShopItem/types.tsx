@@ -8,5 +8,6 @@ export interface IShopItem {
     price: number;
     count: number;
     currency: ShopItemCurrency;
+    isLoading: boolean;
     callback?: () => void;
 }

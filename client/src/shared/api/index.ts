@@ -1,0 +1,1 @@
+export {tonApiSlice, useLazyGetTransactionsQuery, useGetTransactionsQuery } from './tonApiSlice';

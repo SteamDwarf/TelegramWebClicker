@@ -7,4 +7,22 @@
     height: 40px;
     background-color: var(--tg-theme-button-color);
     color: var(--tg-theme-button-text-color);
+
+    & svg {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+
+.header__options {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer; 
+
+    & svg {
+        width: 32px;
+        height: 32px;
+    }
 }

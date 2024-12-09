@@ -4,6 +4,7 @@ import { useCloudeStorage, useTelegramApp } from 'shared/hooks';
 import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router';
 import { useStats, useStatsActions } from 'shared/state';
+import { TonConnectButton } from '@tonconnect/ui-react';
 
 export function App() {
     const { ready, colorScheme } = useTelegramApp()
@@ -35,6 +36,7 @@ export function App() {
             setNeedSave(false);
         }
     }, [needSave])
+
 
     return (
         <div className={`${colorScheme} app`}>

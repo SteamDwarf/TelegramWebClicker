@@ -1,0 +1,148 @@
+#pragma version =0.4.4;
+#pragma allow-post-modification;
+#pragma compute-asm-ltr;
+
+#include "tact_JettonMarket.headers.fc";
+#include "tact_JettonMarket.stdlib.fc";
+#include "tact_JettonMarket.storage.fc";
+
+;;
+;; Contract JettonMarket functions
+;;
+
+((cell, cell), slice, slice, int) $JettonMarket$_contract_init(int $jetton_price, cell $jetton_content) impure inline_ref {
+    var ((($self'jetton_master'code, $self'jetton_master'data), $self'jetton_master_address, $self'owner, $self'jetton_price)) = (null(), null(), null(), null());
+    ($self'jetton_master'code, $self'jetton_master'data) = $JettonMaster$_init_child(__tact_context_sys, $global_myAddress(), $jetton_content);
+    $self'jetton_master_address = $global_contractAddress(($self'jetton_master'code, $self'jetton_master'data));
+    $self'jetton_price = $jetton_price;
+    $self'owner = __tact_context_get_sender();
+    return (($self'jetton_master'code, $self'jetton_master'data), $self'jetton_master_address, $self'owner, $self'jetton_price);
+}
+
+(((cell, cell), slice, slice, int), (int, slice, slice)) $JettonMarket$_fun_get_data(((cell, cell), slice, slice, int) $self) impure inline_ref {
+    var ((($self'jetton_master'code, $self'jetton_master'data), $self'jetton_master_address, $self'owner, $self'jetton_price)) = $self;
+    var $fresh$ret_13 = $MarketData$_constructor_jetton_price_jetton_master_address_owner($self'jetton_price, $self'jetton_master_address, $self'owner);
+    return ((($self'jetton_master'code, $self'jetton_master'data), $self'jetton_master_address, $self'owner, $self'jetton_price), $fresh$ret_13);
+}
+
+(((cell, cell), slice, slice, int), slice) $JettonMarket$_fun_owner(((cell, cell), slice, slice, int) $self) impure inline_ref {
+    var ((($self'jetton_master'code, $self'jetton_master'data), $self'jetton_master_address, $self'owner, $self'jetton_price)) = $self;
+    var $fresh$ret_14 = $self'owner;
+    return ((($self'jetton_master'code, $self'jetton_master'data), $self'jetton_master_address, $self'owner, $self'jetton_price), $fresh$ret_14);
+}
+
+;;
+;; Receivers of a Contract JettonMarket
+;;
+
+((((cell, cell), slice, slice, int)), ()) $JettonMarket$_internal_binary_Buy(((cell, cell), slice, slice, int) $self, (int, int) $msg) impure inline {
+    var (($self'jetton_master'code, $self'jetton_master'data), $self'jetton_master_address, $self'owner, $self'jetton_price) = $self;
+    var ($msg'query_id, $msg'amount) = $msg;
+    var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
+    int $sum = ($msg'amount * $self'jetton_price);
+    throw_unless(48540, ($ctx'value > ($sum + 100000000)));
+    $global_send($SendParameters$_constructor_to_value_body_mode_code_data($self'jetton_master_address, (($ctx'value - $sum) - $Context$_fun_readForwardFee(($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw))), $Transfer$_store_cell($Transfer$_constructor_query_id_amount_reciever_response_destination_forward_ton_amount_custom_payload_forward_payload($msg'query_id, $msg'amount, __tact_context_get_sender(), __tact_context_get_sender(), 0, $Builder$_fun_endCell($global_beginCell()), $Builder$_fun_endCell($global_beginCell()))), 2, $self'jetton_master'code, $self'jetton_master'data));
+    return ((($self'jetton_master'code, $self'jetton_master'data), $self'jetton_master_address, $self'owner, $self'jetton_price), ());
+}
+
+(((cell, cell), slice, slice, int), ()) $JettonMarket$_internal_text_beb2935a82089b154d32f99c4377aa960aa115366cc2c602755e36b97f505cec(((cell, cell), slice, slice, int) $self) impure inline {
+    var (($self'jetton_master'code, $self'jetton_master'data), $self'jetton_master_address, $self'owner, $self'jetton_price) = $self;
+    throw_unless(29170, ( __tact_slice_eq_bits($self'owner, __tact_context_get_sender()) ));
+    $global_send($SendParameters$_constructor_to_value_mode($self'owner, (($global_myBalance() - $Context$_get_value(__tact_context_get())) - 10000000), 66));
+    return ((($self'jetton_master'code, $self'jetton_master'data), $self'jetton_master_address, $self'owner, $self'jetton_price), ());
+}
+
+((((cell, cell), slice, slice, int)), ()) $JettonMarket$_internal_binary_Deploy(((cell, cell), slice, slice, int) $self, (int) $deploy) impure inline {
+    var (($self'jetton_master'code, $self'jetton_master'data), $self'jetton_master_address, $self'owner, $self'jetton_price) = $self;
+    var ($deploy'queryId) = $deploy;
+    (($self'jetton_master'code, $self'jetton_master'data), $self'jetton_master_address, $self'owner, $self'jetton_price)~$JettonMarket$_fun_notify($DeployOk$_store_cell($DeployOk$_constructor_queryId($deploy'queryId)));
+    return ((($self'jetton_master'code, $self'jetton_master'data), $self'jetton_master_address, $self'owner, $self'jetton_price), ());
+}
+
+;;
+;; Get methods of a Contract JettonMarket
+;;
+
+_ %get_data() method_id(78985) {
+    var self = $JettonMarket$_contract_load();
+    var res = self~$JettonMarket$_fun_get_data();
+    return $MarketData$_to_external(res);
+}
+
+_ %owner() method_id(83229) {
+    var self = $JettonMarket$_contract_load();
+    var res = self~$JettonMarket$_fun_owner();
+    return res;
+}
+
+_ lazy_deployment_completed() method_id {
+    return get_data().begin_parse().load_int(1);
+}
+
+;;
+;; Routing of a Contract JettonMarket
+;;
+
+(((cell, cell), slice, slice, int), int) $JettonMarket$_contract_router_internal(((cell, cell), slice, slice, int) self, int msg_bounced, slice in_msg) impure inline_ref {
+    ;; Handle bounced messages
+    if (msg_bounced) {
+        return (self, true);
+    }
+    
+    ;; Parse incoming message
+    int op = 0;
+    if (slice_bits(in_msg) >= 32) {
+        op = in_msg.preload_uint(32);
+    }
+    
+    
+    ;; Receive Buy message
+    if (op == 1863739432) {
+        var msg = in_msg~$Buy$_load();
+        self~$JettonMarket$_internal_binary_Buy(msg);
+        return (self, true);
+    }
+    
+    ;; Receive Deploy message
+    if (op == 2490013878) {
+        var msg = in_msg~$Deploy$_load();
+        self~$JettonMarket$_internal_binary_Deploy(msg);
+        return (self, true);
+    }
+    
+    ;; Text Receivers
+    if (op == 0) {
+        var text_op = slice_hash(in_msg);
+        
+        ;; Receive "withdraw safe" message
+        if (text_op == 0xbeb2935a82089b154d32f99c4377aa960aa115366cc2c602755e36b97f505cec) {
+            self~$JettonMarket$_internal_text_beb2935a82089b154d32f99c4377aa960aa115366cc2c602755e36b97f505cec();
+            return (self, true);
+        }
+    }
+    
+    return (self, false);
+}
+
+() recv_internal(int msg_value, cell in_msg_cell, slice in_msg) impure {
+    
+    ;; Context
+    var cs = in_msg_cell.begin_parse();
+    var msg_flags = cs~load_uint(4);
+    var msg_bounced = -(msg_flags & 1);
+    slice msg_sender_addr = __tact_verify_address(cs~load_msg_addr());
+    __tact_context = (msg_bounced, msg_sender_addr, msg_value, cs);
+    __tact_context_sender = msg_sender_addr;
+    
+    ;; Load contract data
+    var self = $JettonMarket$_contract_load();
+    
+    ;; Handle operation
+    int handled = self~$JettonMarket$_contract_router_internal(msg_bounced, in_msg);
+    
+    ;; Throw if not handled
+    throw_unless(130, handled);
+    
+    ;; Persist state
+    $JettonMarket$_contract_store(self);
+}

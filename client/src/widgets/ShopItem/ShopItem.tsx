@@ -4,6 +4,7 @@ import { IShopItem } from './types';
 import { CoinIcon } from 'shared/icons';
 import { useShopContext } from 'shared/context/ShopContext/ShopContext';
 import { CurrencyIconMapper } from './constants';
+import { Loader } from 'shared/UI/Loader/Loader';
 
 interface ShopItemProps {
     data: IShopItem;
@@ -76,6 +77,11 @@ export const ShopItem:FC<ShopItemProps> = ({data}) => {
                 }
                 
             </section>
+            {
+                data.isLoading && (
+                    <Loader text='Loading...'/>
+                )
+            }
         </div>
     );
 }
