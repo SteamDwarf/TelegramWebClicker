@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: JettonMarket
-BOC Size: 1197 bytes
+BOC Size: 1449 bytes
 
 # Types
 Total Types: 25
@@ -106,9 +106,14 @@ TLB: `null`
 Signature: `null`
 
 # Get Methods
-Total Get Methods: 2
+Total Get Methods: 4
 
 ## get_data
+
+## get_jetton_master_address
+
+## get_jetton_wallet_address
+Argument: owner
 
 ## owner
 
@@ -174,7 +179,7 @@ Ownable --> BaseTrait
 ```mermaid
 graph TD
 JettonMarket
+JettonMarket --> JettonWallet
 JettonMarket --> JettonMaster
 JettonMaster --> JettonWallet
-JettonMarket --> JettonWallet
 ```

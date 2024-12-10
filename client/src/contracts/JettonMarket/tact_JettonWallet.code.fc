@@ -20,8 +20,8 @@
 
 ((slice, slice, int), (int, slice, slice, cell)) $JettonWallet$_fun_get_wallet_data((slice, slice, int) $self) impure inline_ref {
     var (($self'master, $self'owner, $self'balance)) = $self;
-    var $fresh$ret_7 = $WalletData$_constructor_balance_owner_jetton_jetton_wallet_code($self'balance, $self'owner, $self'master, $StateInit$_get_code($JettonWallet$_init_child(__tact_context_sys, $self'owner, $self'master)));
-    return (($self'master, $self'owner, $self'balance), $fresh$ret_7);
+    var $fresh$ret_9 = $WalletData$_constructor_balance_owner_jetton_jetton_wallet_code($self'balance, $self'owner, $self'master, $StateInit$_get_code($JettonWallet$_init_child(__tact_context_sys, $self'owner, $self'master)));
+    return (($self'master, $self'owner, $self'balance), $fresh$ret_9);
 }
 
 ;;

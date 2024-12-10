@@ -21,14 +21,27 @@
 
 (((cell, cell), slice, slice, int), (int, slice, slice)) $JettonMarket$_fun_get_data(((cell, cell), slice, slice, int) $self) impure inline_ref {
     var ((($self'jetton_master'code, $self'jetton_master'data), $self'jetton_master_address, $self'owner, $self'jetton_price)) = $self;
-    var $fresh$ret_13 = $MarketData$_constructor_jetton_price_jetton_master_address_owner($self'jetton_price, $self'jetton_master_address, $self'owner);
-    return ((($self'jetton_master'code, $self'jetton_master'data), $self'jetton_master_address, $self'owner, $self'jetton_price), $fresh$ret_13);
+    var $fresh$ret_17 = $MarketData$_constructor_jetton_price_jetton_master_address_owner($self'jetton_price, $self'jetton_master_address, $self'owner);
+    return ((($self'jetton_master'code, $self'jetton_master'data), $self'jetton_master_address, $self'owner, $self'jetton_price), $fresh$ret_17);
+}
+
+(((cell, cell), slice, slice, int), slice) $JettonMarket$_fun_get_jetton_master_address(((cell, cell), slice, slice, int) $self) impure inline_ref {
+    var ((($self'jetton_master'code, $self'jetton_master'data), $self'jetton_master_address, $self'owner, $self'jetton_price)) = $self;
+    var $fresh$ret_18 = $self'jetton_master_address;
+    return ((($self'jetton_master'code, $self'jetton_master'data), $self'jetton_master_address, $self'owner, $self'jetton_price), $fresh$ret_18);
+}
+
+(((cell, cell), slice, slice, int), slice) $JettonMarket$_fun_get_jetton_wallet_address(((cell, cell), slice, slice, int) $self, slice $owner) impure inline_ref {
+    var ((($self'jetton_master'code, $self'jetton_master'data), $self'jetton_master_address, $self'owner, $self'jetton_price)) = $self;
+    var ($wallet'code, $wallet'data) = $JettonWallet$_init_child(__tact_context_sys, $owner, $self'jetton_master_address);
+    var $fresh$ret_19 = $global_contractAddress(($wallet'code, $wallet'data));
+    return ((($self'jetton_master'code, $self'jetton_master'data), $self'jetton_master_address, $self'owner, $self'jetton_price), $fresh$ret_19);
 }
 
 (((cell, cell), slice, slice, int), slice) $JettonMarket$_fun_owner(((cell, cell), slice, slice, int) $self) impure inline_ref {
     var ((($self'jetton_master'code, $self'jetton_master'data), $self'jetton_master_address, $self'owner, $self'jetton_price)) = $self;
-    var $fresh$ret_14 = $self'owner;
-    return ((($self'jetton_master'code, $self'jetton_master'data), $self'jetton_master_address, $self'owner, $self'jetton_price), $fresh$ret_14);
+    var $fresh$ret_20 = $self'owner;
+    return ((($self'jetton_master'code, $self'jetton_master'data), $self'jetton_master_address, $self'owner, $self'jetton_price), $fresh$ret_20);
 }
 
 ;;
@@ -67,6 +80,19 @@ _ %get_data() method_id(78985) {
     var self = $JettonMarket$_contract_load();
     var res = self~$JettonMarket$_fun_get_data();
     return $MarketData$_to_external(res);
+}
+
+_ %get_jetton_master_address() method_id(68854) {
+    var self = $JettonMarket$_contract_load();
+    var res = self~$JettonMarket$_fun_get_jetton_master_address();
+    return res;
+}
+
+_ %get_jetton_wallet_address(slice $owner) method_id(89632) {
+    slice $owner = __tact_verify_address($owner);
+    var self = $JettonMarket$_contract_load();
+    var res = self~$JettonMarket$_fun_get_jetton_wallet_address($owner);
+    return res;
 }
 
 _ %owner() method_id(83229) {

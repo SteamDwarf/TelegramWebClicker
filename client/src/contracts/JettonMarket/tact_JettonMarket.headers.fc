@@ -81,6 +81,9 @@ _ $Context$_get_value((int, slice, int, slice) v) inline;
 ;; $JettonMaster$init$_store
 builder $JettonMaster$init$_store(builder build_0, (slice, cell) v) inline;
 
+;; $JettonWallet$init$_store
+builder $JettonWallet$init$_store(builder build_0, (slice, slice) v) inline;
+
 ;; $JettonMarket$init$_load
 (slice, ((int, cell))) $JettonMarket$init$_load(slice sc_0) inline;
 
@@ -108,11 +111,20 @@ int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure inline_r
 ;; $SendParameters$_constructor_bounce_to_value_mode_body_code_data
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int $bounce, slice $to, int $value, int $mode, cell $body, cell $code, cell $data) inline;
 
+;; $JettonWallet$_init_child
+(cell, cell) $JettonWallet$_init_child(cell sys', slice $owner, slice $master) inline_ref;
+
 ;; $MarketData$_constructor_jetton_price_jetton_master_address_owner
 ((int, slice, slice)) $MarketData$_constructor_jetton_price_jetton_master_address_owner(int $jetton_price, slice $jetton_master_address, slice $owner) inline;
 
 ;; $JettonMarket$_fun_get_data
 (((cell, cell), slice, slice, int), (int, slice, slice)) $JettonMarket$_fun_get_data(((cell, cell), slice, slice, int) $self) impure inline_ref;
+
+;; $JettonMarket$_fun_get_jetton_master_address
+(((cell, cell), slice, slice, int), slice) $JettonMarket$_fun_get_jetton_master_address(((cell, cell), slice, slice, int) $self) impure inline_ref;
+
+;; $JettonMarket$_fun_get_jetton_wallet_address
+(((cell, cell), slice, slice, int), slice) $JettonMarket$_fun_get_jetton_wallet_address(((cell, cell), slice, slice, int) $self, slice $owner) impure inline_ref;
 
 ;; $JettonMarket$_fun_forward
 (((cell, cell), slice, slice, int), ()) $JettonMarket$_fun_forward(((cell, cell), slice, slice, int) $self, slice $to, cell $body, int $bounce, tuple $init) impure inline_ref;

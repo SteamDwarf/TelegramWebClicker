@@ -25,6 +25,7 @@ PROGRAM{
   DECLPROC $Context$_get_value
   DECLPROC $MarketData$_to_external
   DECLPROC $JettonMaster$init$_store
+  DECLPROC $JettonWallet$init$_store
   DECLPROC $JettonMarket$init$_load
   DECLPROC $JettonMaster$_init_child
   DECLPROC $global_contractAddress
@@ -34,8 +35,11 @@ PROGRAM{
   DECLPROC $global_send
   DECLPROC $Context$_fun_readForwardFee
   DECLPROC $SendParameters$_constructor_bounce_to_value_mode_body_code_data
+  DECLPROC $JettonWallet$_init_child
   DECLPROC $MarketData$_constructor_jetton_price_jetton_master_address_owner
   DECLPROC $JettonMarket$_fun_get_data
+  DECLPROC $JettonMarket$_fun_get_jetton_master_address
+  DECLPROC $JettonMarket$_fun_get_jetton_wallet_address
   DECLPROC $JettonMarket$_fun_forward
   DECLPROC $JettonMarket$_fun_notify
   DECLPROC $JettonMarket$_fun_owner
@@ -47,6 +51,8 @@ PROGRAM{
   DECLPROC $JettonMarket$_internal_text_beb2935a82089b154d32f99c4377aa960aa115366cc2c602755e36b97f505cec
   DECLPROC $JettonMarket$_internal_binary_Deploy
   78985 DECLMETHOD %get_data
+  68854 DECLMETHOD %get_jetton_master_address
+  89632 DECLMETHOD %get_jetton_wallet_address
   83229 DECLMETHOD %owner
   115390 DECLMETHOD lazy_deployment_completed
   DECLPROC $JettonMarket$_contract_router_internal
@@ -271,6 +277,12 @@ PROGRAM{
     __tact_store_address INLINECALLDICT
     STREF
   }>
+  $JettonWallet$init$_store PROCINLINE:<{
+    -ROT
+    __tact_store_address INLINECALLDICT
+    SWAP
+    __tact_store_address INLINECALLDICT
+  }>
   $JettonMarket$init$_load PROCINLINE:<{
     257 PUSHINT
     LDIX
@@ -481,11 +493,47 @@ PROGRAM{
   }>
   $SendParameters$_constructor_bounce_to_value_mode_body_code_data PROCINLINE:<{
   }>
+  $JettonWallet$_init_child PROCREF:<{
+    s0 s2 XCHG
+    CTOS
+    LDDICT
+    DROP
+    NEWDICT
+    SWAP
+    3765 PUSHINT
+    __tact_dict_get_code INLINECALLDICT
+    SWAP
+    3765 PUSHINT
+    s2 PUSH
+    __tact_dict_set_code INLINECALLDICT
+    NEWC
+    SWAP
+    NEWC
+    STDICT
+    ENDC
+    SWAP
+    STREF
+    FALSE
+    SWAP
+    1 STI
+    s0 s0 s3 XCHG3
+    $JettonWallet$init$_store INLINECALLDICT
+    ENDC
+  }>
   $MarketData$_constructor_jetton_price_jetton_master_address_owner PROCINLINE:<{
   }>
   $JettonMarket$_fun_get_data PROCREF:<{
     s0 s2 s1 PUSH3
     $MarketData$_constructor_jetton_price_jetton_master_address_owner INLINECALLDICT
+  }>
+  $JettonMarket$_fun_get_jetton_master_address PROCREF:<{
+    s2 PUSH
+  }>
+  $JettonMarket$_fun_get_jetton_wallet_address PROCREF:<{
+    __tact_context_sys GETGLOB
+    s1 s4 XCPU
+    $JettonWallet$_init_child INLINECALLDICT
+    $global_contractAddress INLINECALLDICT
   }>
   $JettonMarket$_fun_forward PROCREF:<{
     PUSHNULL
@@ -601,6 +649,18 @@ PROGRAM{
     $JettonMarket$_fun_get_data INLINECALLDICT
     5 3 BLKDROP2
     $MarketData$_to_external INLINECALLDICT
+  }>
+  %get_jetton_master_address PROC:<{
+    $JettonMarket$_contract_load INLINECALLDICT
+    $JettonMarket$_fun_get_jetton_master_address INLINECALLDICT
+    5 1 BLKDROP2
+  }>
+  %get_jetton_wallet_address PROC:<{
+    __tact_verify_address INLINECALLDICT
+    $JettonMarket$_contract_load INLINECALLDICT
+    5 ROLL
+    $JettonMarket$_fun_get_jetton_wallet_address INLINECALLDICT
+    5 1 BLKDROP2
   }>
   %owner PROC:<{
     $JettonMarket$_contract_load INLINECALLDICT

@@ -32,7 +32,7 @@ export const useCloudeStorage = () => {
                     wood: Number(values['wood']),
                     food: Number(values['food']),
                     villagers: Number(values['villagers']),
-                    coins: 50
+                    coins: 0
                     //coins: Number(values['coins'])
                 });
                 setIsLoading(false);

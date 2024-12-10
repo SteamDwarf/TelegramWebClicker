@@ -1,13 +1,11 @@
-import { useEffect, useState } from "react";
-import { useTonConnect } from "./useTonConnect"
 import { TonClient } from "@ton/ton";
 import { getHttpEndpoint } from "@orbs-network/ton-access";
 import { CHAIN } from "@tonconnect/ui-react";
 import { useAsyncState } from "./useAsyncState";
 
-export const useTonClient = () => {
-    const { network } = useTonConnect();
+export const useTonClient = (network: CHAIN | null) => {
     const endpoint = useAsyncState(async () => {
+        console.log('render')
         return getHttpEndpoint({
             network: network === CHAIN.MAINNET ? 'mainnet' : 'testnet'
         });
