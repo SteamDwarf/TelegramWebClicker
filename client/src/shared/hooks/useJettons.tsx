@@ -13,7 +13,7 @@ import { useTonConnectUI, Wallet } from "@tonconnect/ui-react";
 import { useTonClient } from "./useTonClient";
 import { useTonConnect } from "./useTonConnect";
 import { useAsyncState } from "./useAsyncState";
-import { Buy, JettonMarket } from "contracts";
+import { Buy, JettonMarket } from "../../contracts";
 
 interface Settings {
     api: null | TonClientApi;
