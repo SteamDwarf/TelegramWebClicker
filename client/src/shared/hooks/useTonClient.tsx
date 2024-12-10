@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useTonConnect } from "./useTonConnect"
 import { TonClient } from "@ton/ton";
 import { getHttpEndpoint } from "@orbs-network/ton-access";
@@ -13,6 +12,7 @@ export const useTonClient = () => {
         });
     }, [network]);
 
+    console.log(endpoint);
     return {
         client: endpoint ? new TonClient({endpoint}) : null
     }

@@ -30,8 +30,6 @@ export const ShopPage = () => {
     const stats = useStats();
     const {increaseStat, updateStat} = useStatsActions();
     const navigate = useNavigate();
-    const [getTransactions, transactions] = useLazyGetTransactionsQuery();
-    const [getAddressInformation, addressInformation] = useLazyGetAddressInformationQuery();
     const wallet = useTonWallet();
     const { transferJettons, getBalance, buyTokkens } = useJettons();
     const [isLoading, setIsLoading] = useState(false);
@@ -44,8 +42,9 @@ export const ShopPage = () => {
 
     const onBuyCoin = useCallback(() => {
         if(!wallet) return;
+        buyTokkens();
         //getBalance();
-        transferJettons(wallet.account.address, 2);
+        //transferJettons(wallet.account.address, 2);
         //sendData('buy_coin_100');
     }, [wallet, transferJettons])
 
@@ -81,7 +80,6 @@ export const ShopPage = () => {
     const onMakingPurchase = useCallback((buttonID: string) => {
         if(shopData.totalPrice > stats.coins || buttonID !== 'Buy') return;
 
-        buyTokkens();
         //increaseStat({stat: 'coins', value: -shopData.totalPrice})
         /* const newData:Record<keyof IAppData, number> = {
             coins: stats.coins - shopData.totalPrice
@@ -126,7 +124,7 @@ export const ShopPage = () => {
 
     }, [])
 
-    useEffect(() => {
+    /* useEffect(() => {
         const getAddressInfoTimer = setInterval(() => {
             if(!wallet?.account.address) return;
             getAddressInformation(Address.parse(wallet?.account.address).toString());
@@ -143,9 +141,9 @@ export const ShopPage = () => {
         }
 
 
-    }, [wallet])
+    }, [wallet]) */
 
-    useEffect(() => {
+/*     useEffect(() => {
         if(addressInformation.data) {
             console.log('last', addressInformation.data);
         }
@@ -160,7 +158,7 @@ export const ShopPage = () => {
             //console.log('in', transactions.data?.result[0]?.in_msg);
             //console.log('out', transactions.data?.result[0]?.out_msgs[0]);
         }
-    }, [transactions])
+    }, [transactions]) */
 
 
     useEffect(() => {

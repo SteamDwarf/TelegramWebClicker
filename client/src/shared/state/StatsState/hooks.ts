@@ -1,7 +1,9 @@
+import { useJettons } from "shared/hooks";
 import { useAppDispatch, useAppSelector } from "../hooks"
 import { selectStats } from "./selectors"
 import { bornVillager, eatFood, increaseStat, resetStat, updateStat } from "./statsSlice";
 import { StatUpdateAction } from "./types";
+import { useEffect, useState } from "react";
 
 export const useStats = () => {
     return useAppSelector(selectStats);

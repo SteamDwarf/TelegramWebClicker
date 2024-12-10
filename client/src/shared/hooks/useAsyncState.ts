@@ -1,16 +1,12 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 
-export const useAsyncState = <T, K>(func: () => Promise<T>, deps: K[]) => {
-    const [state, setState] = useState<T>();
+export function useAsyncState<T>(func: ()=> Promise<T>, deps: any[] = []) {
+    const [state, setState] = useState<T | undefined>();
+    useEffect(()=>{
+        (async ()=> {
+            setState(await func())
+        })()
+    }, deps)
 
-    const changeState = async () => {
-        const data = await func();
-        setState(data);
-    }
-
-    useEffect(() => {
-        changeState();
-    }, [...deps])
-
-    return state;
+    return state
 }
