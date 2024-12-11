@@ -13,6 +13,7 @@ import { useLazyGetTransactionsQuery } from 'shared/api';
 import { Address } from '@ton/core';
 import { useLazyGetAddressInformationQuery } from 'shared/api/tonApiSlice';
 import { Loader } from 'shared/UI/Loader/Loader';
+import { useTonContext } from 'shared/context/TonContext/TonContext';
 
 
 
@@ -23,31 +24,25 @@ export const ShopPage = () => {
         showPopup, 
         onEvent, 
         offEvent, 
-        openInvoice,
-        sendData
     } = useTelegramApp();
     const { data: shopData, clearCart } = useShopContext();
     const stats = useStats();
     const {increaseStat, updateStat} = useStatsActions();
     const navigate = useNavigate();
-    const wallet = useTonWallet();
-    //const { transferJettons, getBalance, buyTokkens } = useJettons();
-    const { buyTokkens } = useJettons();
-    const [isLoading, setIsLoading] = useState(false);
+    const { buyTokkens, burnJettons } = useJettons();
+    const {connected} = useTonContext();
     
     const onClickBackButton = () => {
-        navigate('/');
+        navigate(-1);
         BackButton.hide();
         MainButton.hide();
     }
 
     const onBuyCoin = useCallback(() => {
-        if(!wallet) return;
+        if(!connected) return;
+
         buyTokkens();
-        //getBalance();
-        //transferJettons(wallet.account.address, 2);
-        //sendData('buy_coin_100');
-    }, [buyTokkens])
+    }, [buyTokkens, connected])
 
 
     const shopItems:IShopItem[] = useMemo(() => [
@@ -57,7 +52,8 @@ export const ShopPage = () => {
             price: 1,
             count: 10,
             currency: 'COIN',
-            isLoading: false
+            isLoading: false,
+            disabled: !connected
         },
         {
             icon: <FoodIcon />,
@@ -65,34 +61,37 @@ export const ShopPage = () => {
             price: 1,
             count: 1,
             currency: 'COIN',
-            isLoading: false
+            isLoading: false,
+            disabled: !connected
         },
         {
             icon: <CoinIcon />,
             name: 'coin',
-            price: 100,
+            price: 0.001,
             count: 100,
-            currency: 'MONEY',
+            currency: 'TON',
             callback: onBuyCoin,
-            isLoading: false
+            isLoading: false,
+            disabled: !connected
         }
-    ], [onBuyCoin])
+    ], [onBuyCoin, connected])
 
-    const onMakingPurchase = useCallback((buttonID: string) => {
+    const onMakingPurchase = useCallback(async (buttonID: string) => {
         if(shopData.totalPrice > stats.coins || buttonID !== 'Buy') return;
 
-        //increaseStat({stat: 'coins', value: -shopData.totalPrice})
-        /* const newData:Record<keyof IAppData, number> = {
-            coins: stats.coins - shopData.totalPrice
-        } */
+        try {
+            await burnJettons(shopData.totalPrice);
 
-        Object.values(shopData.cartData).forEach((product) => {
-            increaseStat({stat: product.name, value: product.count})
-            //newData[product.name as keyof IAppData] = data[product.name as keyof IAppData] + product.count;
-        });
+            Object.values(shopData.cartData).forEach((product) => {
+                increaseStat({stat: product.name, value: product.count})
+            });
 
-        //changeData(newData);
-        clearCart();
+
+            clearCart();
+        } catch(error: unknown) {
+            console.log('Error', error);
+        }
+        
     }, [shopData.cartData, stats])
 
     const onClickMainButton = useCallback(() => {
@@ -124,42 +123,6 @@ export const ShopPage = () => {
 
 
     }, [])
-
-    /* useEffect(() => {
-        const getAddressInfoTimer = setInterval(() => {
-            if(!wallet?.account.address) return;
-            getAddressInformation(Address.parse(wallet?.account.address).toString());
-        }, 5000)
-
-        const getTransactionsTimer = setInterval(() => {
-            if(!wallet?.account.address) return;
-            getTransactions(Address.parse(wallet?.account.address).toString());
-        }, 5000)
-
-        return () => {
-            clearInterval(getAddressInfoTimer)
-            clearInterval(getTransactionsTimer)
-        }
-
-
-    }, [wallet]) */
-
-/*     useEffect(() => {
-        if(addressInformation.data) {
-            console.log('last', addressInformation.data);
-        }
-    }, [addressInformation])
-    useEffect(() => {
-        if(transactions.data) {
-            if(transactions.data?.result[0]?.out_msgs?.length > 0 &&
-                !transactions.data?.result[0]?.in_msg?.source
-            ) setIsLoading(true);
-            else setIsLoading(false);
-            console.log('transaction', transactions.data?.result[0]);
-            //console.log('in', transactions.data?.result[0]?.in_msg);
-            //console.log('out', transactions.data?.result[0]?.out_msgs[0]);
-        }
-    }, [transactions]) */
 
 
     useEffect(() => {

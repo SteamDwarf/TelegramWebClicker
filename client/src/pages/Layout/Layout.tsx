@@ -3,6 +3,7 @@ import { useTelegramApp } from "shared/hooks";
 import { Header } from "widgets/Header";
 import "./Layout.scss";
 import { useEffect } from "react";
+import { useTonConnectModal } from "@tonconnect/ui-react";
 
 export const Layout = () => {
     const { ready, colorScheme } = useTelegramApp()

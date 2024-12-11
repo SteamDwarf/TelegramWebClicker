@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 
-export type ShopItemCurrency = 'MONEY' | 'COIN' | 'WOOD';
+export type ShopItemCurrency = 'MONEY' | 'COIN' | 'WOOD' | 'TON';
 
 export interface IShopItem {
     icon: ReactNode;
@@ -9,5 +9,6 @@ export interface IShopItem {
     count: number;
     currency: ShopItemCurrency;
     isLoading: boolean;
+    disabled?: boolean;
     callback?: () => void;
 }

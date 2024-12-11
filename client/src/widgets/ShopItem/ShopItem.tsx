@@ -58,20 +58,26 @@ export const ShopItem:FC<ShopItemProps> = ({data}) => {
                         <button 
                             className='shop__item-button' 
                             onClick={data.callback}
+                            disabled={data.disabled}
                         >
                             Buy
                         </button>
                     ) : (
                         <>
                             <button 
-                                disabled={itemCount <= 0} 
+                                disabled={itemCount <= 0 || data.disabled} 
                                 className='shop__item-button' 
                                 onClick={reduceItem}
                             >
                                 -
                             </button>
                             <span className='shop__item-count'>{itemCount}</span>
-                            <button className='shop__item-button' onClick={addItem}>+</button>
+                            <button 
+                                className='shop__item-button' onClick={addItem}
+                                disabled={data.disabled}
+                            >
+                                    +
+                                </button>
                         </>
                     )
                 }

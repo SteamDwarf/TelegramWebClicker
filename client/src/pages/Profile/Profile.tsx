@@ -2,13 +2,15 @@ import { TonConnectButton } from "@tonconnect/ui-react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useTelegramApp } from "shared/hooks";
+import "./Profile.scss";
 
 export const Profile = () => {
     const { BackButton } = useTelegramApp();
     const navigate = useNavigate();
 
     const onClickBackButton = () => {
-        navigate('/');
+        //TODO Не возвращает на предыдущую страницу
+        navigate(-1);
         BackButton.hide();
     }
 
@@ -18,7 +20,7 @@ export const Profile = () => {
     }, [])
 
     return (
-        <div>
+        <div className="profile">
             <TonConnectButton />
         </div>
     );

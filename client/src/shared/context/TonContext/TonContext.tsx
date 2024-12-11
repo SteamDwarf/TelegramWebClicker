@@ -64,30 +64,6 @@ export const TonContextProvider:FC<PropsWithChildren> = ({children}) => {
         getJettonWalletAddress();
     }, [getJettonWalletAddress])
 
-
-    //const jettonContracts = useAsyncState( async () => {
-        /* if(!client || !wallet) return {
-            jettonMarket: undefined,
-            jettonWallet: undefined
-        };
-
-        console.log('send');
-
-        const market = JettonMarket.fromAddress(Address.parse(import.meta.env.VITE_JETTON_MARKET_ADDRESS)); */
-
-        /* const market = JettonMarket.fromAddress(Address.parse(import.meta.env.VITE_JETTON_MARKET_ADDRESS));
-        const jettonMarketContract = client.open(market) as OpenedContract<JettonMarket>;
-        const walletAddress = await jettonMarketContract.getGetJettonWalletAddress(Address.parse(wallet.account.address));
-        const jWallet = JettonWallet.fromAddress(walletAddress);
-        const jettonWalletContract = client.open(jWallet) as OpenedContract<JettonWallet>;
-
-        return {
-            jettonMarket: jettonMarketContract,
-            jettonWallet: jettonWalletContract
-        } */
-        
-    //}, [client, wallet]);
-
     const value: ContextValue = {
         sender,
         connected,
