@@ -4,8 +4,8 @@ import { createContext, FC, PropsWithChildren, useCallback, useContext, useEffec
 import { useTonClient } from "shared/hooks/useTonClient";
 import { useTonConnect } from "shared/hooks/useTonConnect";
 import { TonClient } from "@ton/ton";
-import { useAsyncState } from "shared/hooks/useAsyncState";
 import { JettonMarket, JettonWallet } from "../../../contracts";
+import { useStatsActions } from "shared/state";
 
 interface ContextValue {
     sender: {
@@ -18,6 +18,7 @@ interface ContextValue {
     client: TonClient | null;
     jettonMarket: OpenedContract<JettonMarket> | undefined;
     jettonWallet: OpenedContract<JettonWallet> | undefined;
+    updateJettonBalance: () => Promise<void>;
 }
 
 const initialData: ContextValue = {
@@ -27,7 +28,8 @@ const initialData: ContextValue = {
     network: null,
     client: null,
     jettonMarket: undefined,
-    jettonWallet: undefined
+    jettonWallet: undefined,
+    updateJettonBalance: () => new Promise(() => null)
 }
 
 const TonContext = createContext(initialData);
@@ -36,7 +38,8 @@ export const TonContextProvider:FC<PropsWithChildren> = ({children}) => {
     const {sender, connected, wallet, network} = useTonConnect();
     const {client} = useTonClient(network);
     const [jettonWalletAddress, setJettonWalletAddress] = useState<string>();
-    
+    const { updateStat } = useStatsActions();
+
     const jettonMarket = useMemo(() => {
         if(!client || !wallet) return;
 
@@ -60,6 +63,19 @@ export const TonContextProvider:FC<PropsWithChildren> = ({children}) => {
         return client.open(jWallet) as OpenedContract<JettonWallet>;
     }, [jettonWalletAddress])
 
+
+    const updateJettonBalance = useCallback(async () => {
+        if(!jettonWallet) return;
+
+        const balance = (await jettonWallet.getGetWalletData()).balance;
+        updateStat({stat: 'coins', value: Number(balance ?? 0)});
+
+    }, [jettonWallet, updateStat]);
+
+    useEffect(() => {
+        updateJettonBalance();
+    }, [updateJettonBalance])
+
     useEffect( () => {
         getJettonWalletAddress();
     }, [getJettonWalletAddress])
@@ -71,7 +87,8 @@ export const TonContextProvider:FC<PropsWithChildren> = ({children}) => {
         network,
         client,
         jettonMarket: jettonMarket,
-        jettonWallet: jettonWallet
+        jettonWallet: jettonWallet,
+        updateJettonBalance
     }
 
     return <TonContext.Provider value={value}>{children}</TonContext.Provider>

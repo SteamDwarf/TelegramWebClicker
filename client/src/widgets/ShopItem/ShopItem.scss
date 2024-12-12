@@ -23,13 +23,18 @@
 .shop__item-icon {
     width: 60px;
     height: 60px;
+
+    & img {
+        width: 60px;
+        height: 60px;
+    }
 }
 
 .shop__item-price {
     display: flex;
     align-items: center;
 
-    & svg {
+    & svg, & img {
         width: 14px;
         height: 14px;
     }

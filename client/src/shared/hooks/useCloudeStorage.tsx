@@ -2,19 +2,15 @@ import { IAppData } from "shared/types";
 import { useTelegramApp } from "./useTelegramApp"
 import { useEffect, useState } from "react";
 
-/* const updateData = (cloudeStorage: CloudStorage, setData: (data: IAppData) => void) => {
-    cloudeStorage.getItem('wood', (error, va))
-} */
-
-
 
 export const useCloudeStorage = () => {
     const { CloudStorage } = useTelegramApp();
-    const [savedData, setSavedData] = useState<IAppData>({
+    const [savedData, setSavedData] = useState<Omit<IAppData, 'coins'>>({
         wood: 0,
         food: 0,
         villagers: 2,
-        coins: 0
+        farmLevel: 0,
+        sawmillLevel: 0
     });
     const [isLoading, setIsLoading] = useState(true);
 
@@ -22,18 +18,19 @@ export const useCloudeStorage = () => {
         CloudStorage.setItem('wood', data.wood.toString());
         CloudStorage.setItem('food', data.food.toString());
         CloudStorage.setItem('villagers', data.villagers.toString());
-        CloudStorage.setItem('coins', data.coins.toString());
+        CloudStorage.setItem('farmLevel', data.farmLevel.toString());
+        CloudStorage.setItem('sawmillLevel', data.sawmillLevel.toString());
     }
 
     useEffect(() => {
-        CloudStorage.getItems(['wood', 'food', 'villagers', 'coins'], (error, values) => {
+        CloudStorage.getItems(['wood', 'food', 'villagers', 'farmLevel', 'sawmillLevel'], (error, values) => {
             if(!error && values) {
                 setSavedData({
                     wood: Number(values['wood']),
                     food: Number(values['food']),
                     villagers: Number(values['villagers']),
-                    coins: 0
-                    //coins: Number(values['coins'])
+                    farmLevel: Number(values['farmLevel']),
+                    sawmillLevel: Number(values['sawmillLevel'])
                 });
                 setIsLoading(false);
             }

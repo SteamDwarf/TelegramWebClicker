@@ -22,6 +22,8 @@ export const statsSlice = createSlice({
             state.food = initialState.food;
             state.wood = initialState.wood;
             state.villagers = initialState.villagers;
+            state.farmLevel = initialState.farmLevel;
+            state.sawmillLevel = initialState.sawmillLevel;
         },
         eatFood: (state: StatsState) => {
             state.food = state.food - state.villagers;

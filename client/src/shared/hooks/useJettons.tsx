@@ -1,86 +1,41 @@
-import { beginCell, toNano } from '@ton/core';
+import { toNano } from '@ton/core';
 import { useCallback } from "react";
-import { Burn, Buy } from "../../contracts";
 import { useTonContext } from 'shared/context/TonContext/TonContext';
-import { useTonConnectModal, useTonConnectUI } from '@tonconnect/ui-react';
 import { getJettonBurnMessage, getJettonBuyMesssage } from 'shared/utils/tonMessages';
+import { useTonTransaction } from './useTonTransaction';
 
 
 export const useJettons = () => {
     const {sender, jettonMarket, jettonWallet} = useTonContext();
-    const [tonConnectUI] = useTonConnectUI();
-
-
-    const getBalance = useCallback(async () => {
-        if(!jettonWallet) return;
-
-        const data = await jettonWallet.getGetWalletData();
-        return data.balance;
-    }, [jettonWallet])
+    const { sendTransaction } = useTonTransaction();
 
     const buyTokkens = useCallback( async () => {
-        if(!jettonMarket || !sender) return;
+        if(!jettonMarket || !sender) return false;
 
         const message = getJettonBuyMesssage();
 
-        try {
-            const resp = await tonConnectUI.sendTransaction({
-                validUntil: Date.now() + 1000 * 60,
-                messages: [
-                    {
-                        address: jettonMarket.address.toString(),
-                        amount: (100n * toNano('0.001') + toNano('0.15')).toString(),
-                        payload: message.toBoc().toString("base64")
-                    }
-                ]
-            });
-
-            console.log(resp);
-        } catch(error: unknown) {
-            console.log('Error', error);
-        }
-        
-
-        /* jettonMarket.send(
-            sender, 
-            {
-                value: 100n * toNano('0.001') + toNano('0.15')
-            },
+        return sendTransaction(
+            jettonMarket.address,
+            100n * toNano('0.001') + toNano('0.15'),
             message
-        ) */
-    }, [jettonMarket, sender])
+        )
+    }, [jettonMarket, sender, sendTransaction])
 
     const burnJettons = useCallback(async (amount: number) => {
-        if(!jettonWallet || !sender?.address) return;
-
-        /* const message: Burn = {
-            $$type: 'Burn',
-            query_id: 0n,
-            amount: BigInt(amount),
-            response_destination: sender.address,
-            custom_payload: beginCell().endCell()
-        } */
+        if(!jettonWallet || !sender?.address) return false;
 
         const message = getJettonBurnMessage(amount, sender.address);
 
-        const resp = await tonConnectUI.sendTransaction({
-            validUntil: Date.now() + 1000 * 60,
-            messages: [
-                {
-                    address: jettonWallet.address.toString(),
-                    amount: toNano('0.05').toString(),
-                    payload: message.toBoc().toString("base64")
-                }
-            ]
-        });
+        return sendTransaction(
+            jettonWallet.address,
+            toNano('0.05'),
+            message
+        )
 
-        console.log(resp);
-
-    }, [jettonWallet, sender])
+    }, [jettonWallet, sender, sendTransaction])
 
     return {
         buyTokkens,
-        getBalance,
         burnJettons
     }
 

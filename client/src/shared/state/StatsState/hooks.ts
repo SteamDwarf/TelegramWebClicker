@@ -1,4 +1,3 @@
-import { useJettons } from "shared/hooks";
 import { useAppDispatch, useAppSelector } from "../hooks"
 import { selectStats } from "./selectors"
 import { bornVillager, eatFood, increaseStat, resetStat, updateStat } from "./statsSlice";

@@ -14,6 +14,8 @@ import { Address } from '@ton/core';
 import { useLazyGetAddressInformationQuery } from 'shared/api/tonApiSlice';
 import { Loader } from 'shared/UI/Loader/Loader';
 import { useTonContext } from 'shared/context/TonContext/TonContext';
+import FarmHouse from 'assets/FarmHouse.png';
+import SawmillImg from 'assets/SawmillHouse.png';
 
 
 
@@ -30,7 +32,7 @@ export const ShopPage = () => {
     const {increaseStat, updateStat} = useStatsActions();
     const navigate = useNavigate();
     const { buyTokkens, burnJettons } = useJettons();
-    const {connected} = useTonContext();
+    const { connected } = useTonContext();
     
     const onClickBackButton = () => {
         navigate(-1);
@@ -38,11 +40,21 @@ export const ShopPage = () => {
         MainButton.hide();
     }
 
-    const onBuyCoin = useCallback(() => {
+    const onBuyCoin = useCallback(async() => {
         if(!connected) return;
 
-        buyTokkens();
+        await buyTokkens();
     }, [buyTokkens, connected])
+
+    const onBuyFarm = useCallback(() => {
+        increaseStat({stat: 'farmLevel', value: 1})
+        increaseStat({stat: 'wood', value: -100})
+    }, [increaseStat])
+
+    const onBuySawmill = useCallback(() => {
+        increaseStat({stat: 'sawmillLevel', value: 1})
+        increaseStat({stat: 'wood', value: -100})
+    }, [increaseStat])
 
 
     const shopItems:IShopItem[] = useMemo(() => [
@@ -73,25 +85,41 @@ export const ShopPage = () => {
             callback: onBuyCoin,
             isLoading: false,
             disabled: !connected
-        }
-    ], [onBuyCoin, connected])
+        },
+        {
+            icon: <img src={FarmHouse}/>,
+            name: 'Farm House',
+            price: 100,
+            count: 1,
+            currency: 'WOOD',
+            callback: onBuyFarm,
+            disabled: stats.farmLevel === 1 || stats.wood < 100
+        },
+        {
+            icon: <img src={SawmillImg}/>,
+            name: 'Sawmill',
+            price: 100,
+            count: 1,
+            currency: 'WOOD',
+            callback: onBuySawmill,
+            disabled: stats.sawmillLevel === 1 || stats.wood < 100
+        },
+    ], [onBuyCoin, connected, onBuyFarm, onBuySawmill])
 
     const onMakingPurchase = useCallback(async (buttonID: string) => {
         if(shopData.totalPrice > stats.coins || buttonID !== 'Buy') return;
 
-        try {
-            await burnJettons(shopData.totalPrice);
+            const isSuccess = await burnJettons(shopData.totalPrice);
 
-            Object.values(shopData.cartData).forEach((product) => {
-                increaseStat({stat: product.name, value: product.count})
-            });
+            if(isSuccess) {
+                Object.values(shopData.cartData).forEach((product) => {
+                    increaseStat({stat: product.name, value: product.count})
+                });
+    
+                clearCart();
+            }
 
-
-            clearCart();
-        } catch(error: unknown) {
-            console.log('Error', error);
-        }
-        
+            console.log('jetton updated');
     }, [shopData.cartData, stats])
 
     const onClickMainButton = useCallback(() => {
