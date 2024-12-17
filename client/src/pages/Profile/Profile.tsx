@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { useTelegramApp } from "shared/hooks";
 import "./Profile.scss";
+import { Achievements } from "widgets/Achievements/Achievements";
 
 export const Profile = () => {
     const { BackButton } = useTelegramApp();
@@ -22,6 +23,7 @@ export const Profile = () => {
     return (
         <div className="profile">
             <TonConnectButton />
+            <Achievements />
         </div>
     );
 }

@@ -4,6 +4,7 @@ import { Header } from "widgets/Header";
 import "./Layout.scss";
 import { useEffect } from "react";
 import { useTonConnectModal } from "@tonconnect/ui-react";
+import { UserNotification } from "widgets/UserNotification/UserNotification";
 
 export const Layout = () => {
     const { ready, colorScheme } = useTelegramApp()
@@ -18,6 +19,7 @@ export const Layout = () => {
             <div className='layout__buttons-container'>
                 <Outlet />
             </div>
+            <UserNotification />
         </div>
     );
 }

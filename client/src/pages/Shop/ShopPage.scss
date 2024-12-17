@@ -1,10 +1,20 @@
 .shop__page {
+    padding: 8px;
+    background: var(--tg-theme-bg-color);
+    color: var(--tg-theme-text-color);
+}
+
+.shop__category {
+    margin-bottom: 16px;
+}
+
+.shop__category-header {
+}
+
+.shop__category-container {
     display: flex;
     flex-wrap: wrap;
     column-gap: 12px;
     row-gap: 12px;
-    padding: 8px;
-    justify-content: center;
-    background: var(--tg-theme-bg-color);
-    color: var(--tg-theme-text-color);
+    justify-content: space-between;
 }

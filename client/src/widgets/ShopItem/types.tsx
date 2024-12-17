@@ -12,3 +12,8 @@ export interface IShopItem {
     disabled?: boolean;
     callback?: () => void;
 }
+
+export interface IShopCategory {
+    name: string;
+    items: IShopItem[];
+}

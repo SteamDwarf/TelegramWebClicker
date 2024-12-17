@@ -4,5 +4,9 @@ import { tonApiSlice } from "shared/api";
 
 export const store = configureStore({
     reducer: reducer,
-    middleware: (getDfaultMiddleware) => getDfaultMiddleware().concat(tonApiSlice.middleware)
+    middleware: (getDfaultMiddleware) => getDfaultMiddleware({
+        serializableCheck: {
+            ignoredPaths: ['notification']
+        }
+    }).concat(tonApiSlice.middleware)
 })
