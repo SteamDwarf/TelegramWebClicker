@@ -21,11 +21,16 @@ export const achievementsSlice = createSlice({
 
         addAchievement: (state: AchievementsState, action: PayloadAction<string>) => {
             state.achievementsString += `__${action.payload}__`;
+        },
+
+        setAchievementsString: (state: AchievementsState, action: PayloadAction<string>) => {
+            state.achievementsString = action.payload;
         }
     }
 });
 
 export const {
     setAchievementsMetadata,
-    addAchievement
+    addAchievement,
+    setAchievementsString
 } = achievementsSlice.actions;

@@ -12,11 +12,7 @@ const items: MenuProps['items'] = [
     {
         key: 0,
         label: <NavLink to='profile'>Profile</NavLink>,
-    },
-    {
-        key: 1,
-        label: <a href='https://httpbin.org/anything'>Test</a>
-    },
+    }
 ]
 
 export const Header = () => {

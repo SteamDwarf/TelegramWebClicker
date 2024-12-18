@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { INITIAL_STATS, useStats, useStatsActions } from "shared/state";
 import { useTelegramApp } from "./useTelegramApp";
 import { useCloudeStorage } from "./useCloudeStorage";
@@ -28,7 +28,7 @@ export const useGameLifeCycle = (settings: GameLifeCycleSettings) => {
                 setGameIsActive(false);
                 showAlert('You have no food and your villagers have died', () => {
                     resetStat();
-                    saveData(INITIAL_STATS);
+                    saveData(INITIAL_STATS, '');
                     setGameIsActive(true);
                 });
             }

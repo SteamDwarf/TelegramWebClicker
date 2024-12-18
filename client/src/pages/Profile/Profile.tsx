@@ -16,7 +16,6 @@ export const Profile = () => {
     }
 
     useEffect(() => {
-        alert('ok');
         BackButton.show();
         BackButton.onClick(onClickBackButton);
     }, []);

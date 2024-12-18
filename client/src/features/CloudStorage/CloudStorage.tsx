@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import { useCloudeStorage } from "shared/hooks";
 import { useStats, useStatsActions } from "shared/state";
+import { useAchievements, useAchievementsActions } from "shared/state/AchievementsState/hooks";
 
 export const  CloudStorage = () => {
     const { savedData, saveData, isLoading } = useCloudeStorage();
     const { updateStat } = useStatsActions();
     const stats = useStats();
+    const {achievementsString} = useAchievements();
+    const {setAchievementsString} = useAchievementsActions();
     const [needSave, setNeedSave] = useState(false);
 
     useEffect(() => {
@@ -21,12 +24,13 @@ export const  CloudStorage = () => {
             updateStat({stat: 'wood', value: savedData.wood});
             updateStat({stat: 'farmLevel', value: savedData.farmLevel});
             updateStat({stat: 'sawmillLevel', value: savedData.sawmillLevel});
+            setAchievementsString(savedData.achievements);
         }
     }, [isLoading])
 
     useEffect(() => {
         if(needSave) {
-            saveData(stats);
+            saveData(stats, achievementsString);
             setNeedSave(false);
         }
     }, [needSave])

@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "../hooks"
-import { addAchievement, setAchievementsMetadata } from "./achievementsSlice";
+import { addAchievement, setAchievementsMetadata, setAchievementsString } from "./achievementsSlice";
 import { selectAchievements } from "./selectors"
 import { AchievementsMetadata } from "./types";
 
@@ -18,6 +18,7 @@ export const useAchievementsActions = () => {
 
     return {
         setAchievementsMetadata: (data: AchievementsMetadata[]) => dispatch(setAchievementsMetadata(data)),
-        addAchievement: (achievement: string) => dispatch(addAchievement(achievement))
+        addAchievement: (achievement: string) => dispatch(addAchievement(achievement)),
+        setAchievementsString: (data: string) => dispatch(setAchievementsString(data))
     }
 }

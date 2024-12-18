@@ -1,7 +1,5 @@
 import { AchievementItem } from "features/AchievementItem";
-import { useEffect } from "react";
-import { useLoadingAchievementsData } from "shared/hooks/useAchievementsData";
-import { useAchievements, useAchievementsActions } from "shared/state/AchievementsState/hooks";
+import { useAchievements } from "shared/state/AchievementsState/hooks";
 import './Achievements.scss';
 
 export const Achievements = () => {
