@@ -19,7 +19,7 @@ export function App() {
 
     return (
         <TonContextProvider>
-            <CloudStorage />
+            {/* <CloudStorage /> */}
             <Layout />
         </TonContextProvider>
     )
