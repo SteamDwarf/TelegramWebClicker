@@ -6,6 +6,8 @@ import { useTonConnect } from "shared/hooks/useTonConnect";
 import { TonClient } from "@ton/ton";
 import { JettonMarket, JettonWallet } from "../../../contracts";
 import { useStatsActions } from "shared/state";
+import { useTonApiClient } from "shared/hooks";
+import { TonApiClient } from "@ton-api/client";
 
 interface ContextValue {
     sender: {
@@ -16,6 +18,7 @@ interface ContextValue {
     wallet: Wallet | (Wallet & WalletInfoWithOpenMethod) | null;
     network: CHAIN | null;
     client: TonClient | null;
+    tonApiClient: TonApiClient | null;
     jettonMarket: OpenedContract<JettonMarket> | undefined;
     jettonWallet: OpenedContract<JettonWallet> | undefined;
     updateJettonBalance: () => Promise<void>;
@@ -27,6 +30,7 @@ const initialData: ContextValue = {
     wallet: null,
     network: null,
     client: null,
+    tonApiClient: null,
     jettonMarket: undefined,
     jettonWallet: undefined,
     updateJettonBalance: () => new Promise(() => null)
@@ -37,6 +41,7 @@ const TonContext = createContext(initialData);
 export const TonContextProvider:FC<PropsWithChildren> = ({children}) => {
     const {sender, connected, wallet, network} = useTonConnect();
     const {client} = useTonClient(network);
+    const tonApiClient = useTonApiClient();
     const [jettonWalletAddress, setJettonWalletAddress] = useState<string>();
     const { updateStat } = useStatsActions();
 
@@ -86,6 +91,7 @@ export const TonContextProvider:FC<PropsWithChildren> = ({children}) => {
         wallet,
         network,
         client,
+        tonApiClient,
         jettonMarket: jettonMarket,
         jettonWallet: jettonWallet,
         updateJettonBalance

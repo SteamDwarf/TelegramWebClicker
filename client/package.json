@@ -12,6 +12,7 @@
   "dependencies": {
     "@orbs-network/ton-access": "^2.3.3",
     "@reduxjs/toolkit": "^2.4.0",
+    "@ton-api/client": "^0.2.0",
     "@ton-community/assets-sdk": "^0.0.5-beta.0",
     "@ton/blueprint": "^0.26.0",
     "@ton/core": "^0.59.0",
