@@ -14,9 +14,23 @@ export const Achievements = () => {
 
     return (
         <div className="achievements">
+
+            <h3>Achievements</h3>
+            <hr />
             {
-                recievedAchievementsIds.map((id) => <AchievementItem data={achievementsMetadata[id]}/>)
+                recievedAchievementsIds.length > 0
+                ? (
+                    <div className="achievements__container">
+                    {
+                        recievedAchievementsIds.map((id) => (
+                            <AchievementItem data={achievementsMetadata[id]}/>
+                        ))
+                    }
+                    </div>
+                )
+                : <h4 className="achievements__no-data">You haven`t achievements</h4>
             }
+            
         </div>
     );
 }

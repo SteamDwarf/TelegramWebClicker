@@ -1,26 +1,18 @@
 import { useJettons, useTelegramApp } from 'shared/hooks';
 import './ShopPage.scss';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router';
-import { IShopItem, ShopItem } from 'widgets/ShopItem';
+import { ShopItem } from 'widgets/ShopItem';
 import { CoinIcon, FoodIcon, LogIcon } from 'shared/icons';
 import { useShopContext } from 'shared/context/ShopContext/ShopContext';
-import { useAppContext } from 'shared/context/AppContext';
-import { IAppData } from 'shared/types';
 import { useStats, useStatsActions } from 'shared/state/StatsState/hooks';
-import { useTonWallet } from '@tonconnect/ui-react';
-import { useLazyGetTransactionsQuery } from 'shared/api';
-import { Address } from '@ton/core';
-import { useLazyGetAddressInformationQuery } from 'shared/api/tonApiSlice';
-import { Loader } from 'shared/UI/Loader/Loader';
 import { useTonContext } from 'shared/context/TonContext/TonContext';
 import FarmHouse from 'assets/FarmHouse.png';
 import SawmillImg from 'assets/SawmillHouse.png';
 import { IShopCategory } from 'widgets/ShopItem/types';
-import { useNotificationsActions } from 'shared/state/NotificationState/hooks';
 import { useAchievements } from 'shared/state/AchievementsState/hooks';
-import { getAchievementModalData } from 'widgets/Achievements/helpers';
 import { useAchievementModal } from 'features/AchievementModalContent/hook';
+import { IAppData } from 'shared/types';
 
 
 
@@ -34,11 +26,10 @@ export const ShopPage = () => {
     } = useTelegramApp();
     const { data: shopData, clearCart } = useShopContext();
     const stats = useStats();
-    const {increaseStat, updateStat} = useStatsActions();
+    const {increaseStat } = useStatsActions();
     const navigate = useNavigate();
     const { buyTokkens, burnJettons } = useJettons();
     const { connected } = useTonContext();
-    const {setModalState} = useNotificationsActions();
     const showAchievement = useAchievementModal();
     const {hasAchievement} = useAchievements();
 
@@ -75,7 +66,7 @@ export const ShopPage = () => {
                 {
                     icon: <CoinIcon />,
                     name: 'coin',
-                    price: 0.001,
+                    price: 0.14,
                     count: 100,
                     currency: 'TON',
                     callback: onBuyCoin,
@@ -139,7 +130,7 @@ export const ShopPage = () => {
 
             if(isSuccess) {
                 Object.values(shopData.cartData).forEach((product) => {
-                    increaseStat({stat: product.name, value: product.count})
+                    increaseStat({stat: product.name as keyof IAppData, value: product.count})
                 });
     
                 clearCart();

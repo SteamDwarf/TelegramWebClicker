@@ -3,7 +3,6 @@ import { useTelegramApp } from "shared/hooks";
 import { Header } from "widgets/Header";
 import "./Layout.scss";
 import { useEffect } from "react";
-import { useTonConnectModal } from "@tonconnect/ui-react";
 import { UserNotification } from "widgets/UserNotification/UserNotification";
 
 export const Layout = () => {
@@ -16,7 +15,7 @@ export const Layout = () => {
     return (
         <div className={`${colorScheme} layout`}>
             <Header />
-            <div className='layout__buttons-container'>
+            <div className='layout__container'>
                 <Outlet />
             </div>
             <UserNotification />

@@ -13,7 +13,7 @@ export const useAchievementModal = () => {
         setModalState({
             modalIsOpened: true,
             modalTitle: 'Achievement recieved!',
-            modalContent: <AchievementModalContent achievementData={achievementsMetadata[id]}/>,
+            modalContent: <AchievementModalContent key={id} achievementData={achievementsMetadata[id]}/>,
             modalOnCancel: () => addAchievement(id.toString()),
             modalOnConfirm: () => addAchievement(id.toString())
         })
