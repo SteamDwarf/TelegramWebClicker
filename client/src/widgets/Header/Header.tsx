@@ -17,7 +17,7 @@ const items: MenuProps['items'] = [
 
 export const Header = () => {
     const { food, wood, villagers, coins } = useStats();
-    const { updateJettonBalance } = useTonContext();
+    const { updateJettonBalance, jettonBalanceIsLoading } = useTonContext();
 
     const stats:IStatItem[] = [
         {
@@ -34,7 +34,8 @@ export const Header = () => {
         },
         {
             icon: <CoinIcon />,
-            value: coins
+            value: coins,
+            isLoading: jettonBalanceIsLoading
         }
     ]
 

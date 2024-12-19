@@ -21,6 +21,8 @@ interface ContextValue {
     tonApiClient: TonApiClient | null;
     jettonMarket: OpenedContract<JettonMarket> | undefined;
     jettonWallet: OpenedContract<JettonWallet> | undefined;
+    jettonBalanceIsLoading: boolean;
+    setJettonBalanceIsLoading: (value: boolean) => void;
     updateJettonBalance: () => Promise<void>;
 }
 
@@ -33,6 +35,8 @@ const initialData: ContextValue = {
     tonApiClient: null,
     jettonMarket: undefined,
     jettonWallet: undefined,
+    jettonBalanceIsLoading: false,
+    setJettonBalanceIsLoading: () => null,
     updateJettonBalance: () => new Promise(() => null)
 }
 
@@ -44,6 +48,7 @@ export const TonContextProvider:FC<PropsWithChildren> = ({children}) => {
     const tonApiClient = useTonApiClient();
     const [jettonWalletAddress, setJettonWalletAddress] = useState<string>();
     const { updateStat } = useStatsActions();
+    const [jettonBalanceIsLoading, setJettonBalanceIsLoading] = useState(false);
 
     const jettonMarket = useMemo(() => {
         if(!client || !wallet) return;
@@ -70,9 +75,11 @@ export const TonContextProvider:FC<PropsWithChildren> = ({children}) => {
 
 
     const updateJettonBalance = useCallback(async () => {
-        if(!jettonWallet) return;
+        if(!tonApiClient || !wallet) return;
+        const walletAddres = Address.parse(wallet.account.address);
+        const jettonMasterAddress = Address.parse(import.meta.env.VITE_JETTON_MASTER_ADDRESS);
 
-        const balance = (await jettonWallet.getGetWalletData()).balance;
+        const balance = (await tonApiClient.accounts.getAccountJettonBalance(walletAddres, jettonMasterAddress)).balance;
         updateStat({stat: 'coins', value: Number(balance ?? 0)});
 
     }, [jettonWallet, updateStat]);
@@ -94,6 +101,8 @@ export const TonContextProvider:FC<PropsWithChildren> = ({children}) => {
         tonApiClient,
         jettonMarket: jettonMarket,
         jettonWallet: jettonWallet,
+        jettonBalanceIsLoading,
+        setJettonBalanceIsLoading,
         updateJettonBalance
     }
 

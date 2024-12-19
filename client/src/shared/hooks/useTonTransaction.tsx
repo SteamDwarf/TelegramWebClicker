@@ -55,9 +55,8 @@ export const useTonTransaction = () => {
     }
 
     useEffect(() => {
-        if(!isLoading) clearInterval(timerId);
-        console.log(isLoading, timerId);
+        if(!isLoading && timerId !== -1) clearInterval(timerId);
     }, [isLoading, timerId])
 
-    return {sendTransaction}
+    return {sendTransaction, isLoading}
 }

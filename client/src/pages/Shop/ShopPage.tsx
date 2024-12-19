@@ -46,14 +46,14 @@ export const ShopPage = () => {
     }, [buyTokkens, connected])
 
     const onBuyFarm = useCallback(() => {
-        if(!hasAchievement(1)) showAchievement(1);
+        //if(!hasAchievement(1)) showAchievement(1);
 
         increaseStat({stat: 'farmLevel', value: 1})
         increaseStat({stat: 'wood', value: -1})
     }, [increaseStat])
 
     const onBuySawmill = useCallback(() => {
-        if(!hasAchievement(2)) showAchievement(2);
+        //if(!hasAchievement(2)) showAchievement(2);
         increaseStat({stat: 'sawmillLevel', value: 1})
         increaseStat({stat: 'wood', value: -1})
     }, [increaseStat])
